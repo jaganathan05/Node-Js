@@ -1,3 +1,10 @@
-console.log('Hello world') ;
-const fs = require('fs');
-fs.writeFileSync('Hello.txt','Hello from node js');
+const productoftwonums =(a,b)=>{
+    return a*b;
+}
+console.log(productoftwonums(2,3));
+
+const student = {
+    name:'Jaganathan',
+    age:21,
+}
+console.log(student)
