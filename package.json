@@ -4,7 +4,9 @@
   "description": "\"complete node js Guide\"",
   "main": "first-app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node first-app.js",
+    "start-server":"node first-app.js"
   },
   "author": "Jaganathan V",
   "license": "ISC"
