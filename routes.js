@@ -22,6 +22,7 @@ const requestHandler = (req,res) =>{
           body.push(chunk);
         });
         req.on('end', () => {
+
           const parsedBody = Buffer.concat(body).toString();
           const message = parsedBody.split('=')[1];
           fs.writeFileSync('message.txt', message, );
@@ -29,6 +30,7 @@ const requestHandler = (req,res) =>{
           res.setHeader('Location', '/');
           return res.end();
         });
+
       } else {
         res.setHeader('Content-Type', 'text/html');
         res.write('<html>');
