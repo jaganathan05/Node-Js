@@ -1,40 +1,20 @@
-const bodyParser = require('body-parser');
+const path = require('path');
+
 const express = require('express');
-const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-app.get('/login', (req, res, next) => {
-    res.send(`
-        <form onsubmit="localStorage.setItem('username', document.getElementById('username1').value)" action="/" method="POST">
-            <input id="username1" type="text" name="username">
-            <button type="submit">add</button>
-        </form>
-    `);
-});
+app.use(bodyParser.urlencoded({extended: false}));
 
-app.post('/', (req, res) => {
-    const user = req.body.username;
-    res.send(`
-        <h1>Welcome, ${user}!</h1>
-        <form action="/message" method="POST">
-        <input type="hidden" name="username" value='${user}'>
-            <input type="text" name="message">
-            <button type="submit">send</button>
-        </form>
-    `);
-});
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
-app.post('/message', (req, res) => {
-    const user = req.body.username;
-    const message = req.body.message;
-
-    fs.writeFileSync('message.txt', `${user}: ${message}`);
-
-    const messages = fs.readFileSync('message.txt', 'utf8');
-    res.send(`<pre>${messages}</pre>`);
+app.use((req, res, next) => {
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
 app.listen(3000);
