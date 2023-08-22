@@ -1,4 +1,4 @@
-const products = [];
+const Product = require('../models/product')
 const path = require('path');
 
 const rootDir = require('../helpers/path');
@@ -7,12 +7,16 @@ exports.getaddproduct = (req, res, next) => {
   };
 
 exports.Postaddproducts = (req, res, next) => {
-    products.push({Title:req.body.title});
+    const product = new Product(req.body.title);
+    product.save();
     res.redirect('/');
   }
 
 exports.getproducts = (req, res, next) => {
-    res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+    Product.fetchAll(products =>{
+        res.sendFile(path.join(rootDir, 'views', 'shop.html'));
+    })
+    
   };
 
 exports.successproducts = (req, res, next) => {
