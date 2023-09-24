@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/login', (req, res, next) => {
     res.send(`
+    <h3>Login With Your Name </h3> 
         <form onsubmit="localStorage.setItem('username', document.getElementById('username1').value)" action="/" method="POST">
             <input id="username1" type="text" name="username">
             <button type="submit">add</button>
@@ -20,10 +21,11 @@ app.post('/', (req, res) => {
     res.send(`
         <h1>Welcome, ${user}!</h1>
         <form action="/message" method="POST">
-        <input type="hidden" name="username" value='${user}'>
+            <input type="hidden" name="username" value='${user}'>
             <input type="text" name="message">
             <button type="submit">send</button>
         </form>
+        <pre>${getPreviousMessages()}</pre>
     `);
 });
 
@@ -31,10 +33,28 @@ app.post('/message', (req, res) => {
     const user = req.body.username;
     const message = req.body.message;
 
-    fs.writeFileSync('message.txt', `${user}: ${message}`);
+    const previousMessages = getPreviousMessages();
+    const newMessage = `${previousMessages}\n ${user}: ${message}`;
+    
+    fs.writeFileSync('message.txt', newMessage);
 
-    const messages = fs.readFileSync('message.txt', 'utf8');
-    res.send(`<pre>${messages}</pre>`);
+    res.send(`
+        <h1>Welcome, ${user}!</h1>
+        <form action="/message" method="POST">
+            <input type="hidden" name="username" value='${user}'>
+            <input type="text" name="message">
+            <button type="submit">send</button>
+        </form>
+        <pre>${newMessage}</pre>
+    `);
 });
+
+function getPreviousMessages() {
+    try {
+        return fs.readFileSync('message.txt', 'utf8');
+    } catch (error) {
+        return '';
+    }
+}
 
 app.listen(3000);
